@@ -1,0 +1,9 @@
+[lint]
+select = ["B", "E", "F", "I"]
+# flake8-bugbear, pyflakes, pycodestyle, isort
+# Never enforce `E501` (line length violations).
+ignore = ["E501"]
+
+[lint.per-file-ignores]
+"docs/*" = ["B", "E", "F"]
+"notebooks/**/*.ipynb" = ["E402", "B007", "E741", "E722", "B905", "F841"]
