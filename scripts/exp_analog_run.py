@@ -12,6 +12,17 @@ in the library, a "hit" is analog recovery, scored three complementary ways:
 
 Writes data/results/analog/{metrics.parquet, per_query.parquet}.
 """
+import os
+# macOS defaults to the 'spawn' start method, which re-imports this (unguarded)
+# module in every joblib worker and crashes. Force 'fork' + disable the ObjC
+# fork-safety check so the backend="multiprocessing" pools work at module scope.
+os.environ.setdefault("OBJC_DISABLE_INITIALIZE_FORK_SAFETY", "YES")
+import multiprocessing as mp
+try:
+    mp.set_start_method("fork")
+except RuntimeError:
+    pass
+
 import time
 from pathlib import Path
 import numpy as np, pandas as pd
