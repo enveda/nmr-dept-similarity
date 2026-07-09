@@ -22,6 +22,7 @@ from rdkit import DataStructs
 
 from dept_similarity.constants import PROCESSED_DATA_DIR, RESULTS_DIR
 from dept_similarity.prepare import prefilter_pairs_by_peak_overlap
+from dept_similarity.utils import passed_cleanup
 import dept_similarity.experiments as R
 
 RDLogger.DisableLog("rdApp.*")
@@ -47,8 +48,14 @@ def fp(smiles):
 BAND_LO, BAND_HI = 0.70, 0.85
 tmax = pd.read_parquet(OUT / "query_tmax.parquet")
 band = tmax[(tmax["tmax"] >= BAND_LO) & (tmax["tmax"] < BAND_HI)].copy()
+# Section 2.1 quality + elemental filters (defensive; also applied upstream in
+# exp_analog_tanimoto.py): RDKit-parseable, elements in {C,H,O,N,S,P,Cl,Br,I},
+# neutral formal charge, 120 <= MW <= 1200 Da.
+band = band[band["smiles"].apply(passed_cleanup)].reset_index(drop=True)
 
 full = pd.read_parquet(f"{PROCESSED_DATA_DIR}/full_nmrshiftdb_dept135_like_spectra.parquet")
+# Tolerate either column naming: intensity_signed (older exports) or signed_shifts.
+full = full.rename(columns={"intensity_signed": "signed_shifts", "inchikey_14": "inchikey14"})
 full = full.sort_values("score", ascending=False).drop_duplicates("inchikey14")
 spec = full.set_index("compound_id")["signed_shifts"]
 band["signed_shifts"] = band["compound_id"].map(spec).map(_arr)
@@ -56,6 +63,7 @@ band = band[band["signed_shifts"].map(len) > 0].reset_index(drop=True)
 print(f"analog queries ({BAND_LO}<=Tmax<{BAND_HI}, with spectra): {len(band)}", flush=True)
 
 lib = pd.read_parquet(f"{PROCESSED_DATA_DIR}/library_data.parquet")
+lib = lib.rename(columns={"intensity_signed": "signed_shifts", "inchikey_14": "inchikey14"})
 lib["signed_shifts"] = lib["signed_shifts"].map(_arr)
 
 qdf = band[["compound_id", "signed_shifts"]].copy()

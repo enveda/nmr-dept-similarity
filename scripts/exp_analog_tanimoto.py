@@ -19,6 +19,7 @@ from rdkit import Chem, RDLogger, DataStructs
 from rdkit.Chem import rdFingerprintGenerator
 
 from dept_similarity.constants import PROCESSED_DATA_DIR, RESULTS_DIR
+from dept_similarity.utils import passed_cleanup
 
 RDLogger.DisableLog("rdApp.*")
 OUT = Path(RESULTS_DIR) / "analog"
@@ -43,7 +44,10 @@ def bit_matrix(smiles_list):
 
 
 # ---- library bit matrix ----
-lib = pd.read_parquet(f"{PROCESSED_DATA_DIR}/library_data.parquet")[["compound_id", "smiles", "inchikey14"]]
+lib = pd.read_parquet(f"{PROCESSED_DATA_DIR}/library_data.parquet")
+# Tolerate either column naming: inchikey_14/intensity_signed (older exports) or inchikey14/signed_shifts.
+lib = lib.rename(columns={"inchikey_14": "inchikey14", "intensity_signed": "signed_shifts"})
+lib = lib[["compound_id", "smiles", "inchikey14"]]
 t = time.time()
 L, lok = bit_matrix(lib["smiles"].tolist())
 lib = lib[lok].reset_index(drop=True)
@@ -56,6 +60,11 @@ print(f"library bit matrix {L.shape} in {time.time()-t:.0f}s", flush=True)
 full = pd.read_parquet(f"{PROCESSED_DATA_DIR}/full_nmrshiftdb_dept135_like_spectra.parquet")
 full = full.sort_values("score", ascending=False).drop_duplicates("inchikey14")
 full = full[~full["inchikey14"].isin(set(lib["inchikey14"]))].reset_index(drop=True)
+# Section 2.1 quality + elemental filters: RDKit-parseable, elements in
+# {C,H,O,N,S,P,Cl,Br,I}, neutral formal charge, 120 <= MW <= 1200 Da.
+n_pre = len(full)
+full = full[full["smiles"].apply(passed_cleanup)].reset_index(drop=True)
+print(f"quality/elemental filter: {n_pre} -> {len(full)} out-of-library structures", flush=True)
 Q, qok = bit_matrix(full["smiles"].tolist())
 Q = Q.astype(np.float32)
 qsum = Q.sum(1)

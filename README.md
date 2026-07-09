@@ -61,8 +61,7 @@ uv sync --all-groups
 
 The similarity methods share one entry point, `rank_library`,
 selected by method key. A spectrum is encoded in the `signed_shifts` column
-which — despite its name — holds **signed chemical shifts** (ppm), *not* peak
-amplitudes: the *magnitude* is the shift and the *sign* is the multiplicity
+which holds **signed chemical shifts** (ppm). The *magnitude* is the shift and the *sign* is the multiplicity
 (negative = CH₂, positive = CH/CH₃). So a CH at 68.7 ppm is `68.7` and a CH₂ at
 58.7 ppm is `-58.7`. (Peak amplitude, if you have it, lives in a separate
 `dept_intensity` column and is not used by the default binary matching.)
