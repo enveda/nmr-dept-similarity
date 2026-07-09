@@ -223,15 +223,8 @@ data/processed/*
 data/analogs/*
 data/results/*
 data/archive/*
-data/ppm_bins_typed_cosine/*
-data/optimization/*
-data/noise_robustness/*
-data/gauss_kernel_cosine/*
-data/hungarian_match_jaccard/*
-data/hungarian_match_cosine/*
 
 
 CLAUDE.md
-notebooks/00_public_library_generation.ipynb
 
 .DS_Store
