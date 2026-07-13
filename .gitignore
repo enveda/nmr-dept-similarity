@@ -231,3 +231,4 @@ CLAUDE.md
 # plot_tie_distribution.py regeneration caches
 data/cache/tie_inputs.pkl
 data/cache/tie_scores.pkl
+data/cache/tie_aware_results.pkl
