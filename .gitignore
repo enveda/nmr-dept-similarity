@@ -228,3 +228,6 @@ data/archive/*
 CLAUDE.md
 
 .DS_Store
+# plot_tie_distribution.py regeneration caches
+data/cache/tie_inputs.pkl
+data/cache/tie_scores.pkl
