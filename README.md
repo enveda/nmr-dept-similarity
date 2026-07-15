@@ -6,6 +6,8 @@ spectrum. It ships the similarity methods themselves, an end-to-end evaluation
 pipeline on the [NMRShiftDB2](https://nmrshiftdb.nmr.uni-koeln.de/) benchmark,
 and the notebooks that reproduce every figure in the accompanying study.
 
+The data directory with the preloaded results can be found on [Zenodo](http://doi.org/10.5281/zenodo.21373988)
+
 ## Citation
 
 If you use this code or the accompanying benchmark, please cite:
