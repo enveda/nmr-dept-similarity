@@ -13,7 +13,9 @@ The data directory with the preloaded results can be found on [Zenodo](http://do
 If you use this code or the accompanying benchmark, please cite:
 
 > Gadiya Y, Singh M, Kind T, Macherla V, Allen A, Misra BB, Domingo-Fernández D.
-> **Automated natural product dereplication via DEPT-135 spectral matching.**
+> **Automated natural product dereplication via DEPT-135 spectral matching.** 
+Digital Discovery (2026) https://doi.org/10.1039/D6DD00553E
+
 
 ```bibtex
 @article{gadiya_dept135_dereplication,
@@ -21,7 +23,9 @@ If you use this code or the accompanying benchmark, please cite:
   author  = {Gadiya, Yojana and Singh, Manvendra and Kind, Tobias and
              Macherla, Venkat and Allen, August and Misra, Biswapriya B. and
              Domingo-Fern{\'a}ndez, Daniel},
+  journal = {Digital Discovery},
   year    = {2026},
+  doi     = {10.1039/D6DD00553E}
 }
 ```
 
